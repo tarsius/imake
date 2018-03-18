@@ -1,4 +1,4 @@
--include config.mk
+-include .config.mk
 
 PKG = imake
 
@@ -14,12 +14,11 @@ LOAD_PATH  ?= $(addprefix -L ../,$(DEPS))
 LOAD_PATH  += -L .
 
 all: lisp
-doc: info html html-dir pdf
 
 help:
-	$(info make all      - generate everything)
-	$(info make lisp     - generate byte-code and autoloads)
-	$(info make clean    - remove generated files)
+	$(info make all          - generate byte-code and autoloads)
+	$(info make lisp         - generate byte-code and autoloads)
+	$(info make clean        - remove generated files)
 	@printf "\n"
 
 lisp: $(ELCS) loaddefs
@@ -30,7 +29,7 @@ loaddefs: $(PKG)-autoloads.el
 	@printf "Compiling $<\n"
 	@$(EMACS) -Q --batch $(EMACS_ARGS) $(LOAD_PATH) -f batch-byte-compile $<
 
-CLEAN = $(ELCS) $(PKG)-autoloads.el
+CLEAN  = $(ELCS) $(PKG)-autoloads.el
 
 clean:
 	@printf "Cleaning...\n"
