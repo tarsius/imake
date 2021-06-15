@@ -1,6 +1,6 @@
 ;;; imake.el --- Simple, opinionated make target runner  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2017-2020  Jonas Bernoulli
+;; Copyright (C) 2017-2021  Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Package-Requires: ((emacs "24.3"))
@@ -73,7 +73,7 @@ regular expression \"^\t$(info make \\([^)]*\\))\" is expected."
                 (push (match-string-no-properties 1) targets))
             (user-error "There is no help target"))
           targets))
-      (user-error "There is no Makefile in %s" default-directory)))
+    (user-error "There is no Makefile in %s" default-directory)))
 
 (provide 'imake)
 ;; Local Variables:
