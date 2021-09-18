@@ -72,7 +72,7 @@ regular expression \"^\t$(info make \\([^)]*\\))\" is expected."
                       "^\t$(info make \\([^)]*\\))" nil t)
                 (push (match-string-no-properties 1) targets))
             (user-error "There is no help target"))
-          targets))
+          (nreverse targets)))
     (user-error "There is no Makefile in %s" default-directory)))
 
 (provide 'imake)
