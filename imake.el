@@ -1,6 +1,6 @@
 ;;; imake.el --- Simple, opinionated make target runner  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2017-2021  Jonas Bernoulli
+;; Copyright (C) 2017-2022  Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Package-Requires: ((emacs "24.3"))
