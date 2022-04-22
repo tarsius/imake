@@ -3,8 +3,9 @@
 ;; Copyright (C) 2017-2022  Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
-;; Package-Requires: ((emacs "24.3"))
 ;; Homepage: https://github.com/tarsius/imake
+
+;; Package-Requires: ((emacs "25.1") (compat "28.1.1.0"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -39,6 +40,8 @@
 ;; the regexp "^\t$(info make \\([^)]*\\))" is expected.
 
 ;;; Code:
+
+(require 'compat)
 
 ;;;###autoload
 (defun imake (target)
