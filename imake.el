@@ -73,8 +73,18 @@ regular expression \"^\t$(info make \\([^)]*\\))\" is expected."
             (insert-file-contents "Makefile"))
           (if (re-search-forward "^help:")
               (while (re-search-forward
-                      "^\t$(info make \\([^)]*\\))" nil t)
-                (push (match-string-no-properties 1) targets))
+                      "^\t$(info make \\(\\(\\([^ ]*\\) *\\)\\([^)]*\\)\\))"
+                      nil t)
+                (let ((name (match-string-no-properties 3)))
+                  (if (string-match-p "\\`\\[[^]]+\\]\\'" name)
+                      (let ((len (length (match-string 2)))
+                            (desc (match-string-no-properties 4)))
+                        (dolist (name (split-string (substring name 1 -1) "|"))
+                          (push (concat name
+                                        (make-string (- len (length name)) ?\s)
+                                        desc)
+                                targets)))
+                    (push (match-string-no-properties 1) targets))))
             (user-error "There is no help target"))
           (nreverse targets)))
     (user-error "There is no Makefile in %s" default-directory)))
