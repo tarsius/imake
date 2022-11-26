@@ -1,18 +1,15 @@
 * Imake — a simple, opinionated make target runner
 
 This package provides the command ~imake~, which prompts for
-a ~make~ target and runs it in the current directory.
+~make~ targets and run them in the current directory.
 
-This is an opinionated command suitable for simple Makefiles
-such as those that can be found in the repositories of some
-Emacs packages.  The make targets to be offered as completion
-candidates have to be documented like so:
+If the ~marginalia~ package is available and some targets are
+documented as shown below, using one or more targets whose
+names begin with "help", then that documentation is shown.
 
 #+begin_src text
-  help:
-          $(info make lisp   - generate byte-code and autoloads)
-          $(info make clean  - remove generated files)
+  help helpall::
+	  $(info make lisp   - generate byte-code and autoloads)
+  help::
+	  $(info make clean  - remove generated files)
 #+end_src
-
-More precisely, a ~help~ target containing lines that match the
-regexp "^\t$(info make \\([^)]*\\))" is expected.

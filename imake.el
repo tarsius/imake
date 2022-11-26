@@ -26,68 +26,79 @@
 ;;; Commentary:
 
 ;; This package provides the command `imake', which prompts for
-;; a `make' target and runs it in the current directory.
+;; make targets and runs them in the current directory.
 
-;; This is an opinionated command suitable for simple Makefiles
-;; such as those that can be found in the repositories of some
-;; Emacs packages.  The make targets to be offered as completion
-;; candidates have to be documented like so:
-;;
-;;   help:
+;; If the `marginalia' package is available and some targets are
+;; documented as shown below, using one or more targets whose
+;; names begin with "help", then that documentation is shown.
+
+;;   help helpall::
 ;;           $(info make lisp  - generate byte-code and autoloads)
+;;   helpall::
 ;;           $(info make clean - remove generated files)
-
-;; More precisely, a `help' target containing lines that match
-;; the regexp "^\t$(info make \\([^)]*\\))" is expected.
 
 ;;; Code:
 
 (require 'compat)
+(require 'subr-x)
+
+(unless (require 'marginalia nil t)
+  (defvar marginalia-command-categories)
+  (defvar marginalia-annotator-registry))
+
+(defvar crm-separator)
+
+(defvar imake--target-alist nil)
+
+(defvar imake-history nil)
 
 ;;;###autoload
-(defun imake (target)
-  "Run make target TARGET.
-
-Prompt for a make target described in the `help' make target and
-run it.  This function only detects targets that are documented
-like so:
-
-  help:
-          $(info make lisp     - generate byte-code and autoloads)
-          $(info make clean    - generate info manual)
-
-More precisely, a `help' target containing lines that match the
-regular expression \"^\t$(info make \\([^)]*\\))\" is expected."
+(defun imake (targets)
+  "Read one or make TARGETS and run them."
   (interactive
-   (let ((choice (completing-read "Target: " (imake-targets))))
-     (string-match "^\\([^ ]*\\)" choice)
-     (list (match-string 1 choice))))
-  (async-shell-command (concat "make " (shell-quote-argument target))))
+   (let ((crm-separator "\\(?:[ \t]*,[ \t]*\\|[ \t]+\\)")
+         (imake--target-alist (and (require 'marginalia nil t)
+                                   (imake-target-alist))))
+     (list (completing-read-multiple "Targets: " (imake-targets)
+                                     nil nil nil 'imake-history))))
+  (async-shell-command
+   (mapconcat #'shell-quote-argument (cons "make" targets) " ")))
 
 (defun imake-targets ()
-  "Return a list of make targets."
-  (if (file-exists-p "Makefile")
-      (let (targets)
-        (with-temp-buffer
-          (save-excursion
-            (insert-file-contents "Makefile"))
-          (if (re-search-forward "^help:")
-              (while (re-search-forward
-                      "^\t$(info make \\(\\(\\([^ ]*\\) *\\)\\([^)]*\\)\\))"
-                      nil t)
-                (let ((name (match-string-no-properties 3)))
-                  (if (string-match-p "\\`\\[[^]]+\\]\\'" name)
-                      (let ((len (length (match-string 2)))
-                            (desc (match-string-no-properties 4)))
-                        (dolist (name (split-string (substring name 1 -1) "|"))
-                          (push (concat name
-                                        (make-string (- len (length name)) ?\s)
-                                        desc)
-                                targets)))
-                    (push (match-string-no-properties 1) targets))))
-            (user-error "There is no help target"))
-          (nreverse targets)))
-    (user-error "There is no Makefile in %s" default-directory)))
+  "Return a complete list of make targets."
+  (thread-last (split-string (shell-command-to-string "\
+make -qp | awk -F':' '/^[a-zA-Z0-9][^$#\/\t=]*:\
+([^=]|$)/ {split($1,A,/ /);for(i in A)print A[i]}' | \
+sort -u") "\n")
+    (delete "Makefile")
+    (delete "")))
+
+(defun imake-target-alist ()
+  "Return an alist of documented make targets."
+  (and (file-exists-p "Makefile")
+       (let (targets)
+         (with-temp-buffer
+           (save-excursion
+             (insert-file-contents "Makefile"))
+           (while (re-search-forward "^help[^:]*:" nil t)
+             (while (re-search-forward "\
+^\t$(info make \\(\\(\\([^ ]*\\) *\\(?:- \\)?\\)\\([^)]*\\)\\))" nil t)
+               (let ((name (match-string-no-properties 3))
+                     (desc (match-string-no-properties 4)))
+                 (if (string-match-p "\\`\\[[^]]+\\]\\'" name)
+                     (dolist (name (split-string (substring name 1 -1) "|"))
+                       (push (cons name desc) targets))
+                   (push (cons name desc) targets))))))
+         (nreverse targets))))
+
+(defun emir-annotate-make-target (target)
+  (marginalia--fields
+   ((or (cdr (assoc target imake--target-alist)) ""))))
+
+(with-eval-after-load 'marginalia
+  (add-to-list 'marginalia-command-categories '(imake . imake))
+  (add-to-list 'marginalia-annotator-registry
+               '(imake emir-annotate-make-target)))
 
 (provide 'imake)
 ;; Local Variables:
