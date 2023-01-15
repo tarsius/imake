@@ -42,9 +42,10 @@
 (require 'compat)
 (require 'subr-x)
 
-(unless (require 'marginalia nil t)
-  (defvar marginalia-command-categories)
-  (defvar marginalia-annotator-registry))
+(require 'marginalia nil t)
+
+(defvar marginalia-command-categories)
+(defvar marginalia-annotator-registry)
 
 (defvar crm-separator)
 
@@ -91,11 +92,10 @@ sort -u") "\n")
                    (push (cons name desc) targets))))))
          (nreverse targets))))
 
-(defun emir-annotate-make-target (target)
-  (marginalia--fields
-   ((or (cdr (assoc target imake--target-alist)) ""))))
-
 (with-eval-after-load 'marginalia
+  (defun emir-annotate-make-target (target)
+    (marginalia--fields
+     ((or (cdr (assoc target imake--target-alist)) ""))))
   (add-to-list 'marginalia-command-categories '(imake . imake))
   (add-to-list 'marginalia-annotator-registry
                '(imake emir-annotate-make-target)))
