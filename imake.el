@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2017-2024 Jonas Bernoulli
 
-;; Author: Jonas Bernoulli <jonas@bernoul.li>
+;; Author: Jonas Bernoulli <emacs.imake@jonas.bernoulli.dev>
 ;; Homepage: https://github.com/tarsius/imake
 ;; Keywords: convenience
 
