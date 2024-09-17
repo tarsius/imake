@@ -94,12 +94,12 @@ sort -u") "\n")
          (nreverse targets))))
 
 (with-eval-after-load 'marginalia
-  (defun emir-annotate-make-target (target)
+  (defun imake-annotate-make-target (target)
     (marginalia--fields
      ((or (cdr (assoc target imake--target-alist)) ""))))
   (add-to-list 'marginalia-command-categories '(imake . imake))
   (add-to-list 'marginalia-annotator-registry
-               '(imake emir-annotate-make-target)))
+               '(imake imake-annotate-make-target)))
 
 (provide 'imake)
 ;; Local Variables:
