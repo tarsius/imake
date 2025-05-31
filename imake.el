@@ -6,8 +6,8 @@
 ;; Homepage: https://github.com/tarsius/imake
 ;; Keywords: convenience
 
-;; Package-Version: 1.2.3
-;; Package-Requires: ((emacs "26.1") (compat "30.0.0.0"))
+;; Package-Version: 1.2.4
+;; Package-Requires: ((emacs "26.1") (compat "30.1"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
