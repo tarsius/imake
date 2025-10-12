@@ -46,7 +46,7 @@
 (require 'marginalia nil t)
 
 (defvar marginalia-command-categories)
-(defvar marginalia-annotator-registry)
+(defvar marginalia-annotators)
 
 (defvar crm-separator)
 
@@ -98,7 +98,7 @@ sort -u") "\n")
     (marginalia--fields
      ((or (cdr (assoc target imake--target-alist)) ""))))
   (add-to-list 'marginalia-command-categories '(imake . imake))
-  (add-to-list 'marginalia-annotator-registry
+  (add-to-list 'marginalia-annotators
                '(imake imake-annotate-make-target)))
 
 (provide 'imake)
