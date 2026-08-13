@@ -56,11 +56,14 @@
 
 (defvar imake-history nil)
 
+(defvar imake-crm-separator
+  "\\(?:[ \t]*,[ \t]*\\|[ \t]+\\)")
+
 ;;;###autoload
 (defun imake (targets)
   "Read one or make TARGETS and run them."
   (interactive
-    (let ((crm-separator "\\(?:[ \t]*,[ \t]*\\|[ \t]+\\)")
+    (let ((crm-separator imake-crm-separator)
           (imake--target-alist (and (require 'marginalia nil t)
                                     (imake-target-alist))))
       (list (completing-read-multiple "Targets: " (imake-targets)
