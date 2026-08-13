@@ -57,7 +57,7 @@
 (defvar imake-history nil)
 
 (defvar imake-crm-separator
-  "\\(?:[ \t]*,[ \t]*\\|[ \t]+\\)")
+  (propertize "[ \t]+" 'separator " " 'description "space-separated list"))
 
 ;;;###autoload
 (defun imake (targets)
