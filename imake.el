@@ -8,8 +8,9 @@
 
 ;; Package-Version: 1.2.7
 ;; Package-Requires: (
-;;     (emacs  "28.1")
-;;     (compat "31.0"))
+;;     (emacs      "28.1")
+;;     (compat     "31.0")
+;;     (marginalia "2.11"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -45,10 +46,10 @@
 (require 'compat)
 (require 'subr-x)
 
-(require 'marginalia nil t)
+(require 'marginalia)
 
-(defvar marginalia-command-categories)
-(defvar marginalia-annotators)
+(add-to-list 'marginalia-command-categories '(imake . imake))
+(add-to-list 'marginalia-annotators '(imake imake-annotate-make-target))
 
 (defvar crm-separator)
 
@@ -64,8 +65,7 @@
   "Read one or make TARGETS and run them."
   (interactive
     (let ((crm-separator imake-crm-separator)
-          (imake--target-alist (and (require 'marginalia nil t)
-                                    (imake-target-alist))))
+          (imake--target-alist (imake-target-alist)))
       (list (completing-read-multiple "Targets: " (imake-targets)
                                       nil nil nil 'imake-history))))
   (async-shell-command
@@ -98,13 +98,9 @@ sort -u") "\n")
                    (push (cons name desc) targets))))))
          (nreverse targets))))
 
-(with-eval-after-load 'marginalia
-  (defun imake-annotate-make-target (target)
-    (marginalia--fields
-     ((or (cdr (assoc target imake--target-alist)) ""))))
-  (add-to-list 'marginalia-command-categories '(imake . imake))
-  (add-to-list 'marginalia-annotators
-               '(imake imake-annotate-make-target)))
+(defun imake-annotate-make-target (target)
+  (marginalia--fields
+   ((or (cdr (assoc target imake--target-alist)) ""))))
 
 (provide 'imake)
 ;; Local Variables:
