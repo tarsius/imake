@@ -16,5 +16,5 @@ is shown.
 
 #+html: <br><br>
 #+html: <a href="https://github.com/tarsius/imake/actions/workflows/compile.yml"><img alt="Compile" src="https://github.com/tarsius/imake/actions/workflows/compile.yml/badge.svg"/></a>
-#+html: <a href="https://stable.melpa.org/#/imake"><img alt="MELPA Stable" src="https://stable.melpa.org/packages/imake-badge.svg"/></a>
-#+html: <a href="https://melpa.org/#/imake"><img alt="MELPA" src="https://melpa.org/packages/imake-badge.svg"/></a>
+#+html: <a href="https://snapshots.melpa.org/#/imake"><img alt="MELPA Snapshots" src="https://snapshots.melpa.org/packages/imake-badge.svg"/></a>
+#+html: <a href="https://releases.melpa.org/#/imake"><img alt="MELPA Releases" src="https://releases.melpa.org/packages/imake-badge.svg"/></a>
