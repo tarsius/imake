@@ -44,7 +44,6 @@
 ;;; Code:
 
 (require 'compat)
-(require 'subr-x)
 
 (require 'marginalia)
 
